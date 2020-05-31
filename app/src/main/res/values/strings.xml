@@ -1,0 +1,13 @@
+<resources>
+	<string name="app_name">Togellenge</string>
+	<string name="title_feed">Лента</string>
+	<string name="title_search">Поиск</string>
+	<string name="title_profile">Профиль</string>
+	<string name="reg_call_to_action">Ещё нет аккаунта? Зарегистрироваться</string>
+	<string name="auth_call_to_action">Уже есть аккаунт? Войти</string>
+	<string name="password">Пароль</string>
+	<string name="email">E-mail</string>
+	<string name="login">Войти</string>
+	<string name="repeat_password">Повторите пароль</string>
+	<string name="register">Зарегистрироваться</string>
+</resources>

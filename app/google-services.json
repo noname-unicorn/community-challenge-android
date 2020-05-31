@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "276455686009",
+    "firebase_url": "https://togellenge-91843.firebaseio.com",
+    "project_id": "togellenge-91843",
+    "storage_bucket": "togellenge-91843.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276455686009:android:3f97ef06cda12aa9f039a8",
+        "android_client_info": {
+          "package_name": "com.miwas.togellenge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276455686009-p3ud5qcm4g4524bh7re7oakt7nsqee8h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALbdM_4J3trc9DPLU8VQ-M4kXTRUCRPCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276455686009-p3ud5qcm4g4524bh7re7oakt7nsqee8h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
