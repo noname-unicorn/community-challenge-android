@@ -5,8 +5,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +19,10 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	fun replaceFragments(fragment: Fragment) {
-		supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment).commit()
+		supportFragmentManager
+			.beginTransaction()
+			.replace(R.id.nav_host_fragment, fragment)
+			.addToBackStack(null)
+			.commit()
 	}
 }

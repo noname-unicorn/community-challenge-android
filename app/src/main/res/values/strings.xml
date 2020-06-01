@@ -10,4 +10,7 @@
 	<string name="login">Войти</string>
 	<string name="repeat_password">Повторите пароль</string>
 	<string name="register">Зарегистрироваться</string>
+	<string name="ready">Готово</string>
+	<string name="chellenge_title">Название</string>
+	<string name="challenge_description">Описание</string>
 </resources>
