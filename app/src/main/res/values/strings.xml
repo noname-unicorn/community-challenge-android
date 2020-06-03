@@ -1,7 +1,7 @@
 <resources>
 	<string name="app_name">Togellenge</string>
 	<string name="title_feed">Лента</string>
-	<string name="title_search">Поиск</string>
+	<string name="title_create">Создать</string>
 	<string name="title_profile">Профиль</string>
 	<string name="reg_call_to_action">Ещё нет аккаунта? Зарегистрироваться</string>
 	<string name="auth_call_to_action">Уже есть аккаунт? Войти</string>

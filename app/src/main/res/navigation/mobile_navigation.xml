@@ -3,25 +3,25 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	app:startDestination="@+id/navigation_home"
+	app:startDestination="@+id/navigation_feed"
 	>
 
 	<fragment
-		android:id="@+id/navigation_home"
+		android:id="@+id/navigation_feed"
 		android:name="com.miwas.togellenge.ui.fragments.feed.FeedFragment"
 		android:label="@string/title_feed"
 		tools:layout="@layout/fragment_feed"
 		/>
 
 	<fragment
-		android:id="@+id/navigation_dashboard"
-		android:name="com.miwas.togellenge.ui.fragments.search.SearchFragment"
-		android:label="@string/title_search"
+		android:id="@+id/navigation_create_challenge"
+		android:name="com.miwas.togellenge.ui.fragments.CreateChallengeFragment"
+		android:label="@string/title_create"
 		tools:layout="@layout/fragment_search"
 		/>
 
 	<fragment
-		android:id="@+id/navigation_notifications"
+		android:id="@+id/navigation_profile"
 		android:name="com.miwas.togellenge.ui.fragments.profile.ProfileFragment"
 		android:label="@string/title_profile"
 		tools:layout="@layout/fragment_profile"
