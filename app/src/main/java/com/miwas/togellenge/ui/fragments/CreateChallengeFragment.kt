@@ -103,7 +103,7 @@ class CreateChallengeFragment : Fragment() {
 			"description" to description,
 			"author" to fireBaseAuth.currentUser?.uid,
 			"name" to name,
-			"participants" to listOf("kjdnfskmdl", "jhfdgnfdj", "qwerty")
+			"participants" to listOf(fireBaseAuth.currentUser?.uid)
 		)
 
 		dataBaseFirebase.collection("challenges")

@@ -4,71 +4,124 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:theme="@style/MaterialTheme"
 	>
 
-	<Button
-		android:id="@+id/login_button"
+	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="20dp"
-		android:layout_marginEnd="20dp"
-		android:background="@drawable/rounded_button_active"
-		android:layout_marginStart="20dp"
-		android:text="@string/login"
-		android:textColor="#ffffff"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.498"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/password_edit"
-		/>
+		android:layout_height="match_parent"
+		>
 
-	<EditText
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:src="@drawable/main_bg_sky_75"
+			/>
+
+	</RelativeLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/email_edit"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="20dp"
-		android:layout_marginStart="20dp"
+		android:layout_margin="20dp"
 		android:hint="@string/email"
+		app:boxBackgroundColor="#ffffff"
+		app:layout_constraintBottom_toTopOf="@+id/password_edit"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		>
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/email_edit_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="textEmailAddress"
+			/>
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/password_edit"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="20dp"
+		android:hint="@string/password"
+		app:boxBackgroundColor="#ffffff"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		/>
+		>
 
-	<EditText
-		android:id="@+id/password_edit"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="20dp"
-		android:layout_marginStart="20dp"
-		android:layout_marginTop="20dp"
-		android:hint="@string/password"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/email_edit"
-		/>
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/password_edit_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:cursorVisible="true"
+			android:inputType="textPassword"
+			/>
+
+	</com.google.android.material.textfield.TextInputLayout>
+
 
 	<TextView
-		android:id="@+id/textView3"
+		android:id="@+id/name"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/app_name"
 		android:textSize="20sp"
+		android:textColor="#ffffff"
 		app:layout_constraintBottom_toTopOf="@+id/email_edit"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		/>
 
+	<Button
+		android:id="@+id/login_button"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="30dp"
+		android:layout_marginEnd="20dp"
+		android:background="@drawable/rounded_button_active"
+		android:layout_marginStart="20dp"
+		android:text="@string/login"
+		android:textColor="#ffffff"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/password_edit"
+		/>
+
+
+	<TextView
+		android:id="@+id/invalid_auth_warning"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="40dp"
+		android:gravity="center"
+		android:textColor="#ff0000"
+		android:visibility="invisible"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/login_button"
+		tools:visibility="visible"
+		tools:text="Неверно"
+		/>
+
 	<TextView
 		android:id="@+id/havent_account"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="40dp"
 		android:text="@string/reg_call_to_action"
+		android:textColor="#ffffff"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/invalid_auth_warning"
 		/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,4 +14,14 @@
 	<string name="chellenge_title">Название</string>
 	<string name="challenge_description">Описание</string>
 	<string name="confirmation_way_warning">Необходимо выбрать способ подтверждения выполнения челленджа</string>
+
+	<string name="invalid_email">Неверный формат E-mail</string>
+	<string name="wrong_password">Неверный E-mail или пароль</string>
+	<string name="user_not_found">Пользователь не найден</string>
+	<string name="already_has_user">Пользователь с таким E-mail уже создан</string>
+	<string name="weak_password">Недостаточно безопасный пароль</string>
+	<string name="passwords_not_match">Пароли не совпадают</string>
+
+	<string name="error_occurred">Произошла ошибка</string>
+
 </resources>
