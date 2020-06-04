@@ -23,5 +23,7 @@
 	<string name="passwords_not_match">Пароли не совпадают</string>
 
 	<string name="error_occurred">Произошла ошибка</string>
+	<string name="participants_count">Количество участников</string>
+	<string name="confirmation_way">Способ подтверждения</string>
 
 </resources>

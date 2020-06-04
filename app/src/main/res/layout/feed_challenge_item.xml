@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:tools="http://schemas.android.com/tools"
+	app:layout_constraintBottom_toBottomOf="parent"
+	app:layout_constraintEnd_toEndOf="parent"
+	app:layout_constraintStart_toStartOf="parent"
+	app:layout_constraintTop_toTopOf="parent"
+	>
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
+
+		<TextView
+			android:id="@+id/participant_count"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="20dp"
+			android:layout_marginTop="40dp"
+			android:textColor="#000000"
+			android:textSize="20sp"
+			android:text="@string/participants_count"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/description"
+			/>
+
+		<TextView
+			android:id="@+id/participant_count_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			tools:text="6"
+			app:layout_constraintEnd_toEndOf="@+id/participant_count"
+			app:layout_constraintStart_toStartOf="@+id/participant_count"
+			app:layout_constraintTop_toBottomOf="@+id/participant_count"
+			/>
+
+		<TextView
+			android:id="@+id/description"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="20dp"
+			android:text="Название челленджа"
+			android:textColor="#000000"
+			android:textSize="20sp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+
+
+		<TextView
+			android:id="@+id/confirmation_method"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="20dp"
+			android:textSize="20sp"
+			android:text="@string/confirmation_way"
+			android:textColor="#000000"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/participant_count_text"
+			/>
+
+
+		<ImageView
+			android:id="@+id/confirmation_method_image"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="10dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/confirmation_method"
+			app:layout_constraintStart_toStartOf="@+id/confirmation_method"
+			app:layout_constraintTop_toBottomOf="@+id/confirmation_method"
+			app:srcCompat="@drawable/ic_camera"
+			/>
+
+
+		<Button
+			android:id="@+id/button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/rounded_button_active"
+			android:text="+"
+			android:textSize="30sp"
+			android:textColor="#ffffff"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
