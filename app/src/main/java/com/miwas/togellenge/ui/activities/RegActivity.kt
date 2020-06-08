@@ -11,9 +11,12 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.miwas.togellenge.R
 
@@ -28,6 +31,7 @@ class RegActivity : AppCompatActivity() {
 	private lateinit var alreadyHaveAccount: TextView
 	private lateinit var invalidRegWarning: TextView
 	private lateinit var sharedPreferences: SharedPreferences
+	private lateinit var dataBaseFirebase: FirebaseFirestore
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -37,6 +41,7 @@ class RegActivity : AppCompatActivity() {
 			WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 		)
 		auth = Firebase.auth
+		dataBaseFirebase = Firebase.firestore
 		registerButton = findViewById(R.id.button_register)
 		emailEdit = findViewById(R.id.email_edit)
 		passwordEdit = findViewById(R.id.password_edit)
@@ -87,6 +92,7 @@ class RegActivity : AppCompatActivity() {
 			.addOnCompleteListener(this) { task ->
 				if (task.isSuccessful) {
 					Log.d("singUp", "createUserWithEmail:success")
+					addUser(auth.currentUser?.email)
 					finish()
 				} else {
 					Log.w("singUp", "createUserWithEmail:failure", task.exception)
@@ -104,5 +110,24 @@ class RegActivity : AppCompatActivity() {
 					}
 				}
 			}
+	}
+
+	private fun addUser(email: String?) {
+
+		val user = hashMapOf(
+			"registration_date" to Timestamp.now(),
+			"email" to email,
+			"avatar" to "default"
+		)
+
+		dataBaseFirebase.collection("users")
+			.add(user)
+			.addOnSuccessListener { documentReference ->
+				Log.d("DB", "DocumentSnapshot added with ID: ${documentReference.id}")
+			}
+			.addOnFailureListener { e ->
+				Log.w("DB", "Error adding document", e)
+			}
+
 	}
 }

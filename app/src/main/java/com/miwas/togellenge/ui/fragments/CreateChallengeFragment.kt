@@ -1,6 +1,7 @@
 package com.miwas.togellenge.ui.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.miwas.togellenge.R
+import com.miwas.togellenge.ui.activities.AuthActivity
 
 class CreateChallengeFragment : Fragment() {
 
@@ -80,6 +82,14 @@ class CreateChallengeFragment : Fragment() {
 		fireBaseAuth = Firebase.auth
 
 		return root
+	}
+
+	override fun onStart() {
+		super.onStart()
+		if (fireBaseAuth.currentUser == null) {
+			val intent = Intent(context, AuthActivity::class.java)
+			startActivity(intent)
+		}
 	}
 
 	private fun changeActiveButton(selectedWayNumber: Int, context: Context) {
