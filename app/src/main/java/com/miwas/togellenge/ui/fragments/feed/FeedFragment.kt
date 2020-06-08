@@ -5,8 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,13 +15,14 @@ import com.google.firebase.ktx.Firebase
 import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
 import com.miwas.togellenge.models.User
+import com.miwas.togellenge.ui.adapters.FeedChallengeAdapter
 
 class FeedFragment : Fragment() {
 
-	private lateinit var toAuthButton: Button
 	private lateinit var feedChallengeRecycler: RecyclerView
 	private lateinit var dataBaseFirebase: FirebaseFirestore
 	private val challengesArray = mutableListOf<Challenge>()
+	private val feedChallengeAdapter = FeedChallengeAdapter()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -32,6 +33,10 @@ class FeedFragment : Fragment() {
 		feedChallengeRecycler = root.findViewById(R.id.feed_challenge_recycler)
 		dataBaseFirebase = Firebase.firestore
 		requestChallenges()
+		feedChallengeRecycler.apply {
+			adapter = feedChallengeAdapter
+			layoutManager = LinearLayoutManager(context)
+		}
 		return root
 	}
 
@@ -59,7 +64,7 @@ class FeedFragment : Fragment() {
 					)
 					Log.e("res", "${document.id} => ${document.data}")
 				}
-				Log.e("res", "")
+				feedChallengeAdapter.setChallengesList(challengesArray)
 			}
 	}
 }
