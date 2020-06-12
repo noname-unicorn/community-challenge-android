@@ -12,14 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
 import com.miwas.togellenge.ui.activities.AuthActivity
 import com.miwas.togellenge.ui.adapters.FeedChallengeAdapter
+import com.miwas.togellenge.utils.Constants.CHALLENGES_COLLECTION
+import com.miwas.togellenge.utils.Constants.PARTICIPANTS_FIELD
 import java.util.ArrayList
 
 class FeedFragment : Fragment() {
@@ -42,9 +44,9 @@ class FeedFragment : Fragment() {
 		requestChallenges()
 
 		val bookClickListener: JoinButtonListener = object : JoinButtonListener {
-			override fun onClick(challenge: Challenge) {
+			override fun onClick(challenge: Challenge, position: Int) {
 				if (fireBaseAuth.currentUser != null) {
-					addOrDeleteParticipant(challenge)
+					addOrDeleteParticipant(challenge, position)
 				} else {
 					val intent = Intent(context, AuthActivity::class.java)
 					startActivity(intent)
@@ -62,7 +64,7 @@ class FeedFragment : Fragment() {
 
 	private fun requestChallenges() {
 		dataBaseFirebase
-			.collection("challenges")
+			.collection(CHALLENGES_COLLECTION)
 			.get()
 			.addOnSuccessListener { result ->
 				for (document in result) {
@@ -90,26 +92,33 @@ class FeedFragment : Fragment() {
 			}
 	}
 
-	private fun addOrDeleteParticipant(challenge: Challenge) {
-		var fireParticipants = hashMapOf("participants" to challenge.participants?.plus(fireBaseAuth.currentUser?.uid))
+	private fun addOrDeleteParticipant(challenge: Challenge, position: Int) {
 		if (challenge.isCurrentUserParticipate) {
 			challenge.isCurrentUserParticipate = false
-			fireParticipants = hashMapOf("participants" to challenge.participants?.minus(fireBaseAuth.currentUser?.uid))
+			challenge.id?.let { id ->
+				dataBaseFirebase.collection(CHALLENGES_COLLECTION)
+					.document(id)
+					.update(PARTICIPANTS_FIELD, FieldValue.arrayRemove(fireBaseAuth.currentUser?.uid))
+					.addOnSuccessListener {
+						feedChallengeAdapter.updateChallenge(position)
+					}
+			}
 			(challenge.participants as ArrayList).remove(fireBaseAuth.currentUser?.uid)
 		} else {
 			challenge.isCurrentUserParticipate = true
-			if (challenge.participants.isNullOrEmpty()) {
-				fireParticipants = hashMapOf("participants" to listOf(fireBaseAuth.currentUser?.uid))
+			challenge.id?.let { id ->
+				dataBaseFirebase.collection(CHALLENGES_COLLECTION)
+					.document(id)
+					.update(PARTICIPANTS_FIELD, FieldValue.arrayUnion(fireBaseAuth.currentUser?.uid))
+					.addOnSuccessListener {
+						feedChallengeAdapter.updateChallenge(position)
+					}
 			}
 			(challenge.participants as ArrayList).add((fireBaseAuth.currentUser ?: return).uid)
-		}
-
-		challenge.id?.let { id ->
-			dataBaseFirebase.collection("challenges").document(id).set(fireParticipants, SetOptions.merge())
 		}
 	}
 
 	interface JoinButtonListener {
-		fun onClick(challenge: Challenge)
+		fun onClick(challenge: Challenge, position: Int)
 	}
 }

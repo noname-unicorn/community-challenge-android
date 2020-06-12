@@ -38,7 +38,8 @@ class FeedChallengeAdapter(
 		val confirmationMethod = holder.itemView.findViewById<ImageView>(R.id.confirmation_method_image)
 		val joinButton = holder.itemView.findViewById<Button>(R.id.join_button)
 		if (challenge.isCurrentUserParticipate) {
-			joinButton.setBackgroundColor(Color.RED)
+			joinButton.background = holder.itemView.context.getDrawable(R.drawable.rounded_button_red)
+			joinButton.text = "-"
 		}
 		name.text = challenge.name
 		participantsCount.text = challenge.participants?.count().toString()
@@ -49,18 +50,17 @@ class FeedChallengeAdapter(
 		}
 		confirmationMethod.background = confirmationMethod.context.getDrawable(confirmationMethodImage)
 		joinButton.setOnClickListener {
-			joinClickListener.onClick(challenge)
-			if (challenge.isCurrentUserParticipate) {
-				joinButton.setBackgroundColor(Color.BLUE)
-			} else {
-				joinButton.setBackgroundColor(Color.RED)
-			}
+			joinClickListener.onClick(challenge, position)
 		}
 	}
 
 	fun setChallengesList(challenges: List<Challenge>) {
 		this.challengesList = challenges
 		notifyDataSetChanged()
+	}
+
+	fun updateChallenge(position: Int) {
+		notifyItemChanged(position)
 	}
 
 	override fun getItemCount() = challengesList.size

@@ -22,6 +22,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.miwas.togellenge.R
 import com.miwas.togellenge.ui.activities.AuthActivity
+import com.miwas.togellenge.utils.Constants.CHALLENGES_COLLECTION
 
 class CreateChallengeFragment : Fragment() {
 
@@ -116,7 +117,7 @@ class CreateChallengeFragment : Fragment() {
 			"participants" to listOf(fireBaseAuth.currentUser?.uid)
 		)
 
-		dataBaseFirebase.collection("challenges")
+		dataBaseFirebase.collection(CHALLENGES_COLLECTION)
 			.add(challenge)
 			.addOnSuccessListener { documentReference ->
 				Log.d("DB", "DocumentSnapshot added with ID: ${documentReference.id}")
