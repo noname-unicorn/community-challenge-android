@@ -1,4 +1,4 @@
-package com.miwas.togellenge.ui.fragments
+package com.miwas.togellenge.ui.fragments.creation
 
 import android.content.Context
 import android.content.Intent

@@ -2,7 +2,6 @@ package com.miwas.togellenge.models
 
 import com.google.firebase.Timestamp
 
-
 class Challenge {
 	var id: String? = null
 	var confirmationMethod: String? = null
@@ -12,4 +11,5 @@ class Challenge {
 	var name: String? = null
 	var participants: List<String>? = null
 	var isCurrentUserParticipate = false
+	var isCurrentUserAuthor = false
 }

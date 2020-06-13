@@ -15,7 +15,7 @@
 
 	<fragment
 		android:id="@+id/navigation_create_challenge"
-		android:name="com.miwas.togellenge.ui.fragments.CreateChallengeFragment"
+		android:name="com.miwas.togellenge.ui.fragments.creation.CreateChallengeFragment"
 		android:label="@string/title_create"
 		tools:layout="@layout/fragment_search"
 		/>

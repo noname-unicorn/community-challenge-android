@@ -1,8 +1,8 @@
 package com.miwas.togellenge.ui.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
@@ -10,13 +10,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
-import com.miwas.togellenge.ui.fragments.feed.FeedFragment
+import com.miwas.togellenge.presentation.listeners.JoinButtonListener
 
-class FeedChallengeAdapter(
-	private val joinClickListener: FeedFragment.JoinButtonListener
-) : RecyclerView.Adapter<FeedChallengeAdapter.FeedChallengeViewHolder>() {
+class ChallengesAdapter(
+	private val joinClickListener: JoinButtonListener
+) : RecyclerView.Adapter<ChallengesAdapter.FeedChallengeViewHolder>() {
 
-	private var challengesList: List<Challenge> = listOf()
+	private var challengesList = mutableListOf<Challenge>()
 
 	class FeedChallengeViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -37,10 +37,19 @@ class FeedChallengeAdapter(
 		val participantsCount = holder.itemView.findViewById<TextView>(R.id.participant_count_text)
 		val confirmationMethod = holder.itemView.findViewById<ImageView>(R.id.confirmation_method_image)
 		val joinButton = holder.itemView.findViewById<Button>(R.id.join_button)
-		if (challenge.isCurrentUserParticipate) {
-			joinButton.background = holder.itemView.context.getDrawable(R.drawable.rounded_button_red)
-			joinButton.text = "-"
+
+		if (challenge.isCurrentUserAuthor) {
+			joinButton.visibility = GONE
+		} else {
+			if (challenge.isCurrentUserParticipate) {
+				joinButton.background = holder.itemView.context.getDrawable(R.drawable.rounded_button_red)
+				joinButton.text = "-"
+			} else {
+				joinButton.background = holder.itemView.context.getDrawable(R.drawable.rounded_button_active)
+				joinButton.text = "+"
+			}
 		}
+
 		name.text = challenge.name
 		participantsCount.text = challenge.participants?.count().toString()
 		val confirmationMethodImage = when (challenge.confirmationMethod) {
@@ -48,19 +57,24 @@ class FeedChallengeAdapter(
 			"video" -> R.drawable.ic_videocamera
 			else -> R.drawable.ic_notebook
 		}
-		confirmationMethod.background = confirmationMethod.context.getDrawable(confirmationMethodImage)
+		confirmationMethod.setImageDrawable(confirmationMethod.context.getDrawable(confirmationMethodImage))
 		joinButton.setOnClickListener {
 			joinClickListener.onClick(challenge, position)
 		}
 	}
 
-	fun setChallengesList(challenges: List<Challenge>) {
+	fun setChallengesList(challenges: MutableList<Challenge>) {
 		this.challengesList = challenges
 		notifyDataSetChanged()
 	}
 
 	fun updateChallenge(position: Int) {
 		notifyItemChanged(position)
+	}
+
+	fun removeChallenge(challenge: Challenge) {
+		challengesList.remove(challenge)
+		notifyDataSetChanged()
 	}
 
 	override fun getItemCount() = challengesList.size

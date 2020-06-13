@@ -7,7 +7,7 @@
 	android:layout_height="match_parent"
 	android:background="#ffffff"
 	android:theme="@style/MaterialTheme"
-	tools:context=".ui.fragments.CreateChallengeFragment"
+	tools:context=".ui.fragments.creation.CreateChallengeFragment"
 	>
 
 	<Button
