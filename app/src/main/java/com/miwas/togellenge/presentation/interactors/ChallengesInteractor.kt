@@ -5,10 +5,9 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.QuerySnapshot
 import com.miwas.togellenge.models.Challenge
 import com.miwas.togellenge.network.firebase.FirebaseRequester
-import com.miwas.togellenge.presentation.listeners.AddUserToChallengeListener
+import com.miwas.togellenge.network.listeners.MakeOperationListener
 import com.miwas.togellenge.presentation.listeners.ReadyChallengesListener
 import com.miwas.togellenge.network.listeners.ReceiveResultListener
-import com.miwas.togellenge.presentation.listeners.RemoveUserFromChallengeListener
 
 class ChallengesInteractor {
 
@@ -56,11 +55,15 @@ class ChallengesInteractor {
 		firebaseRequester.getParticipatedChallenges(generateReceiveChallengesListener(readyChallengesListener, uid))
 	}
 
-	fun addUserToChallenge(addUserToChallengeListener: AddUserToChallengeListener, challengeId: String) {
+	fun createChallenge(createChallengeListener: MakeOperationListener, challenge: HashMap<String, Any?>) {
+		firebaseRequester.createChallenge(createChallengeListener, challenge)
+	}
+
+	fun addUserToChallenge(addUserToChallengeListener: MakeOperationListener, challengeId: String) {
 		firebaseRequester.addUserToChallenge(addUserToChallengeListener, challengeId)
 	}
 
-	fun removeUserFromChallenge(removeUserFromChallengeListener: RemoveUserFromChallengeListener, challengeId: String) {
+	fun removeUserFromChallenge(removeUserFromChallengeListener: MakeOperationListener, challengeId: String) {
 		firebaseRequester.removeUserFromChallenge(removeUserFromChallengeListener, challengeId)
 	}
 

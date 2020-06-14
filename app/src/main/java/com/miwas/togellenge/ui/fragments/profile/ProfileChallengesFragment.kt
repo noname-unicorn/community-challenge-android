@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
+import com.miwas.togellenge.network.listeners.MakeOperationListener
 import com.miwas.togellenge.presentation.listeners.JoinButtonListener
 import com.miwas.togellenge.presentation.interactors.ChallengesInteractor
-import com.miwas.togellenge.presentation.listeners.RemoveUserFromChallengeListener
 import com.miwas.togellenge.presentation.presenter.ProfilePresenter
 import com.miwas.togellenge.ui.adapters.ChallengesAdapter
 
@@ -46,10 +46,14 @@ class ProfileChallengesFragment : Fragment() {
 		val challengeClickListener: JoinButtonListener = object : JoinButtonListener {
 			override fun onClick(challenge: Challenge, position: Int) {
 				challenge.id?.let { challengeId ->
-					val removeUserFromChallengeListener: RemoveUserFromChallengeListener =
-						object : RemoveUserFromChallengeListener {
-							override fun onRemoved() {
+					val removeUserFromChallengeListener: MakeOperationListener =
+						object : MakeOperationListener {
+							override fun onComplete() {
 								challengesAdapter.removeChallenge(challenge)
+							}
+
+							override fun onFailure() {
+
 							}
 						}
 					challengesInteractor.removeUserFromChallenge(removeUserFromChallengeListener, challengeId)

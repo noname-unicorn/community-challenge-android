@@ -17,8 +17,8 @@ class ProfilePresenter : BasePresenter<ProfileView>() {
 	private val userInteractor: UserInteractor = UserInteractor()
 
 	override fun viewIsReady() {
-		getAllAvailableInfo()
 		baseView?.initView()
+		getAllAvailableInfo()
 	}
 
 	private fun getAllAvailableInfo() {

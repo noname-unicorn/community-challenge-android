@@ -1,5 +1,6 @@
 package com.miwas.togellenge.network.firebase
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -7,9 +8,8 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.miwas.togellenge.presentation.listeners.AddUserToChallengeListener
+import com.miwas.togellenge.network.listeners.MakeOperationListener
 import com.miwas.togellenge.network.listeners.ReceiveResultListener
-import com.miwas.togellenge.presentation.listeners.RemoveUserFromChallengeListener
 import com.miwas.togellenge.utils.Constants
 
 object FirebaseRequester {
@@ -52,21 +52,41 @@ object FirebaseRequester {
 			}
 	}
 
-	fun addUserToChallenge(addUserToChallengeListener: AddUserToChallengeListener, challengeId: String) {
+	fun createChallenge(createChallengeListener: MakeOperationListener, challenge: HashMap<String, Any?>) {
+		dataBaseFirebase.collection(Constants.CHALLENGES_COLLECTION)
+			.add(challenge)
+			.addOnSuccessListener { documentReference ->
+				createChallengeListener.onComplete()
+				Log.d("DB", "DocumentSnapshot added with ID: ${documentReference.id}")
+			}
+			.addOnFailureListener { e ->
+				createChallengeListener.onFailure()
+				Log.w("DB", "Error adding document", e)
+			}
+	}
+
+	fun addUserToChallenge(addUserToChallengeListener: MakeOperationListener, challengeId: String) {
 		dataBaseFirebase.collection(Constants.CHALLENGES_COLLECTION)
 			.document(challengeId)
 			.update(Constants.PARTICIPANTS_FIELD, FieldValue.arrayUnion(fireBaseAuth.currentUser?.uid))
 			.addOnSuccessListener {
-				addUserToChallengeListener.onAdded()
+				addUserToChallengeListener.onComplete()
 			}
+			.addOnFailureListener {
+				addUserToChallengeListener.onFailure()
+			}
+
 	}
 
-	fun removeUserFromChallenge(removeUserFromChallengeListener: RemoveUserFromChallengeListener, challengeId: String) {
+	fun removeUserFromChallenge(removeUserFromChallengeListener: MakeOperationListener, challengeId: String) {
 		dataBaseFirebase.collection(Constants.CHALLENGES_COLLECTION)
 			.document(challengeId)
 			.update(Constants.PARTICIPANTS_FIELD, FieldValue.arrayRemove(fireBaseAuth.currentUser?.uid))
 			.addOnSuccessListener {
-				removeUserFromChallengeListener.onRemoved()
+				removeUserFromChallengeListener.onComplete()
+			}
+			.addOnFailureListener {
+				removeUserFromChallengeListener.onFailure()
 			}
 	}
 

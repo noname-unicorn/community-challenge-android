@@ -5,8 +5,6 @@ import com.miwas.togellenge.models.Challenge
 
 interface ProfileView : MvpView {
 
-	fun initView()
-
 	fun setParticipatedList(challenges: MutableList<Challenge>)
 
 	fun setCreatedList(challenges: MutableList<Challenge>)

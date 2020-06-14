@@ -11,22 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
 import com.miwas.togellenge.presentation.listeners.JoinButtonListener
-import com.miwas.togellenge.presentation.interactors.ChallengesInteractor
-import com.miwas.togellenge.presentation.interactors.UserInteractor
-import com.miwas.togellenge.presentation.listeners.AddUserToChallengeListener
-import com.miwas.togellenge.presentation.listeners.ReadyChallengesListener
-import com.miwas.togellenge.presentation.listeners.RemoveUserFromChallengeListener
+import com.miwas.togellenge.presentation.presenter.FeedPresenter
+import com.miwas.togellenge.presentation.view.FeedView
 import com.miwas.togellenge.ui.activities.AuthActivity
 import com.miwas.togellenge.ui.adapters.ChallengesAdapter
-import java.util.ArrayList
 
-class FeedFragment : Fragment() {
+class FeedFragment : Fragment(), FeedView {
 
+	private lateinit var feedPresenter: FeedPresenter
 	private lateinit var feedChallengeRecycler: RecyclerView
-
 	private lateinit var challengesAdapter: ChallengesAdapter
-	private val challengesInteractor: ChallengesInteractor = ChallengesInteractor()
-	private val userInteractor: UserInteractor = UserInteractor()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -35,66 +29,41 @@ class FeedFragment : Fragment() {
 	): View? {
 		val root = inflater.inflate(R.layout.fragment_feed, container, false)
 		feedChallengeRecycler = root.findViewById(R.id.feed_challenge_recycler)
-		requestChallenges()
+		initPresenter()
+		return root
+	}
 
+	private fun initPresenter() {
+		feedPresenter = FeedPresenter()
+		feedPresenter.attachView(this)
+		feedPresenter.viewIsReady()
+	}
+
+	override fun initView() {
 		val challengeClickListener: JoinButtonListener = object : JoinButtonListener {
 			override fun onClick(challenge: Challenge, position: Int) {
-				if (userInteractor.isCurrentUser()) {
-					addOrDeleteParticipant(challenge, position)
-				} else {
-					val intent = Intent(context, AuthActivity::class.java)
-					startActivity(intent)
-				}
+				feedPresenter.onJoinButtonClicked(challenge, position)
 			}
 		}
+
 		challengesAdapter = ChallengesAdapter(challengeClickListener)
 
 		feedChallengeRecycler.apply {
 			adapter = challengesAdapter
 			layoutManager = LinearLayoutManager(context)
 		}
-		return root
 	}
 
-	private fun requestChallenges() {
-
-		val readyChallengesListener: ReadyChallengesListener = object : ReadyChallengesListener {
-			override fun onReady(challenges: MutableList<Challenge>) {
-				challengesAdapter.setChallengesList(challenges)
-			}
-		}
-
-		userInteractor.getUserUid()?.let { userUid ->
-			challengesInteractor.getAllChallenges(readyChallengesListener, userUid)
-		}
+	override fun updateChallenge(position: Int) {
+		challengesAdapter.updateChallenge(position)
 	}
 
-	private fun addOrDeleteParticipant(challenge: Challenge, position: Int) {
-		if (challenge.isCurrentUserParticipate) {
-			challenge.id?.let { challengeId ->
+	override fun setChallengesList(challenges: MutableList<Challenge>) {
+		challengesAdapter.setChallengesList(challenges)
+	}
 
-				val removeUserFromChallengeListener: RemoveUserFromChallengeListener =
-					object : RemoveUserFromChallengeListener {
-						override fun onRemoved() {
-							(challenge.participants as ArrayList).remove(userInteractor.getUserUid())
-							challenge.isCurrentUserParticipate = false
-							challengesAdapter.updateChallenge(position)
-						}
-					}
-				challengesInteractor.removeUserFromChallenge(removeUserFromChallengeListener, challengeId)
-			}
-		} else {
-			challenge.id?.let { challengeId ->
-
-				val addUserToChallengeListener: AddUserToChallengeListener = object : AddUserToChallengeListener {
-					override fun onAdded() {
-						(challenge.participants as ArrayList).add(userInteractor.getUserUid() ?: return)
-						challenge.isCurrentUserParticipate = true
-						challengesAdapter.updateChallenge(position)
-					}
-				}
-				challengesInteractor.addUserToChallenge(addUserToChallengeListener, challengeId)
-			}
-		}
+	override fun goToAuth() {
+		val intent = Intent(context, AuthActivity::class.java)
+		startActivity(intent)
 	}
 }

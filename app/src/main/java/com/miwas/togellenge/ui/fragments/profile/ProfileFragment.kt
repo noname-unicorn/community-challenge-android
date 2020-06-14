@@ -1,5 +1,6 @@
 package com.miwas.togellenge.ui.fragments.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +14,12 @@ import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
 import com.miwas.togellenge.presentation.presenter.ProfilePresenter
 import com.miwas.togellenge.presentation.view.ProfileView
+import com.miwas.togellenge.ui.activities.AuthActivity
 import com.miwas.togellenge.ui.adapters.ProfileChallengesPagerAdapter
 
 class ProfileFragment : Fragment(), ProfileView {
 
-	private lateinit var presenter: ProfilePresenter
+	private lateinit var profilePresenter: ProfilePresenter
 	private lateinit var viewPager: ViewPager
 	private lateinit var tabLayout: TabLayout
 	private lateinit var nestedScroll: NestedScrollView
@@ -39,33 +41,34 @@ class ProfileFragment : Fragment(), ProfileView {
 		challengesParticipateCounter = root.findViewById(R.id.challenges_participate_counter)
 		challengesCreatedCounter = root.findViewById(R.id.challenges_created_counter)
 		confirmationsCount = root.findViewById(R.id.confirmations_count)
-		presenter = ProfilePresenter()
-		presenter.attachView(this)
-		presenter.viewIsReady()
+		initPresenter()
 		return root
 	}
 
+	private fun initPresenter() {
+		profilePresenter = ProfilePresenter()
+		profilePresenter.attachView(this)
+		profilePresenter.viewIsReady()
+	}
 
-	override fun onStart() {
-		super.onStart()
+	override fun initView() {
+
 		viewPager.offscreenPageLimit = 0
 		nestedScroll.isFillViewport = true
 		participatedFragment = ProfileChallengesFragment.newInstance(1) ?: return
-		participatedFragment.setPresenter(presenter)
+		participatedFragment.setPresenter(profilePresenter)
 		participatedFragment.initializeAdapter()
 		createdFragment = ProfileChallengesFragment.newInstance(2) ?: return
-		createdFragment.setPresenter(presenter)
+		createdFragment.setPresenter(profilePresenter)
 		createdFragment.initializeAdapter()
 
 		activity?.supportFragmentManager?.let {
-			val adapter = ProfileChallengesPagerAdapter(it, presenter)
+			val adapter = ProfileChallengesPagerAdapter(it, profilePresenter)
 			adapter.addFragment(participatedFragment)
 			adapter.addFragment(createdFragment)
 			viewPager.adapter = adapter
 		}
-	}
 
-	override fun initView() {
 		tabLayout.apply {
 			setupWithViewPager(viewPager)
 		}
@@ -89,6 +92,11 @@ class ProfileFragment : Fragment(), ProfileView {
 
 	override fun setConfirmationsCounter(count: Int) {
 		confirmationsCount.text = count.toString()
+	}
+
+	override fun goToAuth() {
+		val intent = Intent(context, AuthActivity::class.java)
+		startActivity(intent)
 	}
 
 }
