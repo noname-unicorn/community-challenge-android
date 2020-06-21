@@ -1,5 +1,6 @@
 package com.miwas.togellenge.ui.fragments.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,10 @@ import com.miwas.togellenge.models.Challenge
 import com.miwas.togellenge.network.listeners.MakeOperationListener
 import com.miwas.togellenge.presentation.listeners.JoinButtonListener
 import com.miwas.togellenge.presentation.interactors.ChallengesInteractor
+import com.miwas.togellenge.presentation.listeners.ChallengeClickListener
 import com.miwas.togellenge.presentation.presenter.ProfilePresenter
+import com.miwas.togellenge.ui.activities.AuthActivity
+import com.miwas.togellenge.ui.activities.ChallengeActivity
 import com.miwas.togellenge.ui.adapters.ChallengesAdapter
 
 class ProfileChallengesFragment : Fragment() {
@@ -43,7 +47,7 @@ class ProfileChallengesFragment : Fragment() {
 	}
 
 	fun initializeAdapter() {
-		val challengeClickListener: JoinButtonListener = object : JoinButtonListener {
+		val joinChallengeClickListener: JoinButtonListener = object : JoinButtonListener {
 			override fun onClick(challenge: Challenge, position: Int) {
 				challenge.id?.let { challengeId ->
 					val removeUserFromChallengeListener: MakeOperationListener =
@@ -60,7 +64,14 @@ class ProfileChallengesFragment : Fragment() {
 				}
 			}
 		}
-		challengesAdapter = ChallengesAdapter(challengeClickListener)
+
+		val challengeClickListener: ChallengeClickListener = object : ChallengeClickListener {
+			override fun onClick(challenge: Challenge, position: Int) {
+				val intent = Intent(context, ChallengeActivity::class.java)
+				startActivity(intent)
+			}
+		}
+		challengesAdapter = ChallengesAdapter(joinChallengeClickListener, challengeClickListener)
 	}
 
 	fun setPresenter(profilePresenter: ProfilePresenter) {

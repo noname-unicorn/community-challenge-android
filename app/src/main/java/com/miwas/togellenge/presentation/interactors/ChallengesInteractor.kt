@@ -1,13 +1,15 @@
 package com.miwas.togellenge.presentation.interactors
 
-import android.util.Log
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.miwas.togellenge.models.Challenge
 import com.miwas.togellenge.network.firebase.FirebaseRequester
 import com.miwas.togellenge.network.listeners.MakeOperationListener
+import com.miwas.togellenge.network.listeners.ReceiveDocumentResultListener
 import com.miwas.togellenge.presentation.listeners.ReadyChallengesListener
 import com.miwas.togellenge.network.listeners.ReceiveResultListener
+import com.miwas.togellenge.presentation.listeners.ReadyChallengeListener
 
 class ChallengesInteractor {
 
@@ -18,29 +20,27 @@ class ChallengesInteractor {
 
 		for (document in result) {
 			challengesArray.add(
-				Challenge().apply {
-					id = document.id
-					name =
-						if (document.data["name"] == null) null else document.data["name"] as String
-					description =
-						if (document.data["description"] == null) null else document.data["description"] as String
-					date =
-						if (document.data["date"] == null) null else document.data["date"] as Timestamp
-					participants =
-						if (document.data["participants"] == null) null else document.data["participants"] as List<String>
-					isCurrentUserParticipate = participants?.contains(uid) ?: false
-					authorId =
-						if (document.data["author"] == null) null else document.data["author"] as String
-					isCurrentUserAuthor = authorId == uid
-
-					confirmationMethod =
-						if (document.data["accept_method"] == null) null else document.data["accept_method"] as String
-				}
+				getChallengeByDocument(document, uid)
 			)
-			Log.e("res", "${document.id} => ${document.data}")
 		}
 
 		return challengesArray
+	}
+
+	fun getChallenge(readyChallengeListener: ReadyChallengeListener, documentId: String, uid: String) {
+
+		val receiveDocumentResultListener: ReceiveDocumentResultListener = object : ReceiveDocumentResultListener {
+			override fun onReceived(result: DocumentSnapshot) {
+				readyChallengeListener.onReady(getChallengeByDocument(result, uid))
+			}
+
+			override fun onFailure() {
+
+			}
+
+		}
+
+		firebaseRequester.getChallenge(receiveDocumentResultListener, documentId)
 	}
 
 	fun getAllChallenges(readyChallengesListener: ReadyChallengesListener, uid: String) {
@@ -63,6 +63,14 @@ class ChallengesInteractor {
 		firebaseRequester.addUserToChallenge(addUserToChallengeListener, challengeId)
 	}
 
+	fun addConfirmationToChallenge(
+		addConfirmationToChallengeListener: MakeOperationListener,
+		challengeId: String,
+		confirmationId: String
+	) {
+		firebaseRequester.addConfirmationToChallenge(addConfirmationToChallengeListener, challengeId, confirmationId)
+	}
+
 	fun removeUserFromChallenge(removeUserFromChallengeListener: MakeOperationListener, challengeId: String) {
 		firebaseRequester.removeUserFromChallenge(removeUserFromChallengeListener, challengeId)
 	}
@@ -70,8 +78,7 @@ class ChallengesInteractor {
 	private fun generateReceiveChallengesListener(
 		readyChallengesListener: ReadyChallengesListener,
 		uid: String
-	) = object :
-		ReceiveResultListener {
+	) = object : ReceiveResultListener {
 		override fun onReceived(result: QuerySnapshot) {
 			readyChallengesListener.onReady(generateChallenges(result, uid))
 		}
@@ -80,4 +87,28 @@ class ChallengesInteractor {
 			//TODO: add errors handling
 		}
 	}
+
+	private fun getChallengeByDocument(document: DocumentSnapshot, uid: String) = document.data?.let { data ->
+
+		Challenge().apply {
+			id = document.id
+			name =
+				if (data["name"] == null) null else data["name"] as String
+			description =
+				if (data["description"] == null) null else data["description"] as String
+			date =
+				if (data["date"] == null) null else data["date"] as Timestamp
+			participants =
+				if (data["participants"] == null) null else data["participants"] as List<String>
+			isCurrentUserParticipate = participants?.contains(uid) ?: false
+			authorId =
+				if (data["author"] == null) null else data["author"] as String
+			isCurrentUserAuthor = authorId == uid
+
+			confirmationMethod =
+				if (data["accept_method"] == null) null else data["accept_method"] as String
+		}
+
+	} ?: Challenge()
+
 }

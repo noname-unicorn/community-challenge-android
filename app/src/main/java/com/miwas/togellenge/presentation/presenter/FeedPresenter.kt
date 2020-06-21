@@ -7,6 +7,7 @@ import com.miwas.togellenge.presentation.interactors.ChallengesInteractor
 import com.miwas.togellenge.presentation.interactors.UserInteractor
 import com.miwas.togellenge.presentation.listeners.ReadyChallengesListener
 import com.miwas.togellenge.presentation.view.FeedView
+import com.miwas.togellenge.utils.Constants.EMPTY_STRING
 import java.util.ArrayList
 
 class FeedPresenter : BasePresenter<FeedView>() {
@@ -72,9 +73,8 @@ class FeedPresenter : BasePresenter<FeedView>() {
 			}
 		}
 
-		userInteractor.getUserUid()?.let { userUid ->
-			challengesInteractor.getAllChallenges(readyChallengesListener, userUid)
-		}
+		val userUid = userInteractor.getUserUid() ?: EMPTY_STRING
+		challengesInteractor.getAllChallenges(readyChallengesListener, userUid)
 	}
 
 }

@@ -10,11 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
+import com.miwas.togellenge.presentation.listeners.ChallengeClickListener
 import com.miwas.togellenge.presentation.listeners.JoinButtonListener
 import com.miwas.togellenge.presentation.presenter.FeedPresenter
 import com.miwas.togellenge.presentation.view.FeedView
 import com.miwas.togellenge.ui.activities.AuthActivity
+import com.miwas.togellenge.ui.activities.ChallengeActivity
 import com.miwas.togellenge.ui.adapters.ChallengesAdapter
+import com.miwas.togellenge.utils.Constants.CHALLENGE_ID_PARAM
 
 class FeedFragment : Fragment(), FeedView {
 
@@ -40,13 +43,21 @@ class FeedFragment : Fragment(), FeedView {
 	}
 
 	override fun initView() {
-		val challengeClickListener: JoinButtonListener = object : JoinButtonListener {
+		val joinChallengeClickListener: JoinButtonListener = object : JoinButtonListener {
 			override fun onClick(challenge: Challenge, position: Int) {
 				feedPresenter.onJoinButtonClicked(challenge, position)
 			}
 		}
 
-		challengesAdapter = ChallengesAdapter(challengeClickListener)
+		val challengeClickListener: ChallengeClickListener = object : ChallengeClickListener {
+			override fun onClick(challenge: Challenge, position: Int) {
+				val intent = Intent(context, ChallengeActivity::class.java)
+				intent.putExtra(CHALLENGE_ID_PARAM, challenge.id)
+				startActivity(intent)
+			}
+		}
+
+		challengesAdapter = ChallengesAdapter(joinChallengeClickListener, challengeClickListener)
 
 		feedChallengeRecycler.apply {
 			adapter = challengesAdapter

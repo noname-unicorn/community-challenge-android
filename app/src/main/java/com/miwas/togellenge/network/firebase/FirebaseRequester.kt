@@ -1,6 +1,5 @@
 package com.miwas.togellenge.network.firebase
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -8,7 +7,11 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.UploadTask
+import com.miwas.togellenge.network.listeners.CreateDocumentResultListener
+import com.miwas.togellenge.network.listeners.LoadFileListener
 import com.miwas.togellenge.network.listeners.MakeOperationListener
+import com.miwas.togellenge.network.listeners.ReceiveDocumentResultListener
 import com.miwas.togellenge.network.listeners.ReceiveResultListener
 import com.miwas.togellenge.utils.Constants
 
@@ -19,6 +22,19 @@ object FirebaseRequester {
 	fun getUserUid(): String? = fireBaseAuth.uid
 
 	fun getCurrentUser(): FirebaseUser? = fireBaseAuth.currentUser
+
+	fun getChallenge(receiveResultListener: ReceiveDocumentResultListener, documentId: String) {
+		dataBaseFirebase
+			.collection(Constants.CHALLENGES_COLLECTION)
+			.document(documentId)
+			.get()
+			.addOnSuccessListener { result ->
+				receiveResultListener.onReceived(result)
+			}
+			.addOnFailureListener {
+				receiveResultListener.onFailure()
+			}
+	}
 
 	fun getAllChallenges(receiveResultListener: ReceiveResultListener) {
 		dataBaseFirebase
@@ -57,11 +73,9 @@ object FirebaseRequester {
 			.add(challenge)
 			.addOnSuccessListener { documentReference ->
 				createChallengeListener.onComplete()
-				Log.d("DB", "DocumentSnapshot added with ID: ${documentReference.id}")
 			}
 			.addOnFailureListener { e ->
 				createChallengeListener.onFailure()
-				Log.w("DB", "Error adding document", e)
 			}
 	}
 
@@ -74,6 +88,23 @@ object FirebaseRequester {
 			}
 			.addOnFailureListener {
 				addUserToChallengeListener.onFailure()
+			}
+
+	}
+
+	fun addConfirmationToChallenge(
+		addConfirmationToChallengeListener: MakeOperationListener,
+		challengeId: String,
+		confirmationId: String
+	) {
+		dataBaseFirebase.collection(Constants.CHALLENGES_COLLECTION)
+			.document(challengeId)
+			.update(Constants.CONFIRMATIONS_FIELD, FieldValue.arrayUnion(confirmationId))
+			.addOnSuccessListener {
+				addConfirmationToChallengeListener.onComplete()
+			}
+			.addOnFailureListener {
+				addConfirmationToChallengeListener.onFailure()
 			}
 
 	}
@@ -96,6 +127,39 @@ object FirebaseRequester {
 			.get()
 			.addOnSuccessListener { result ->
 				receiveResultListener.onReceived(result)
+			}
+	}
+
+	fun loadFile(loadFileListener: LoadFileListener, loadFileTask: UploadTask) {
+		loadFileTask
+			.addOnSuccessListener { task ->
+				task.metadata?.reference?.downloadUrl?.let { taskUrl ->
+					taskUrl
+						.addOnSuccessListener { uri ->
+							loadFileListener.onComplete(uri.toString())
+						}
+						.addOnFailureListener {
+							loadFileListener.onFailure()
+						}
+				}
+
+			}
+			.addOnFailureListener {
+				loadFileListener.onFailure()
+			}
+	}
+
+	fun createConfirmation(
+		createConfirmationListener: CreateDocumentResultListener,
+		confirmation: HashMap<String, Comparable<*>?>
+	) {
+		dataBaseFirebase.collection(Constants.CONFIRMATIONS_COLLECTION)
+			.add(confirmation)
+			.addOnSuccessListener {
+				createConfirmationListener.onReceived(it)
+			}
+			.addOnFailureListener {
+				createConfirmationListener.onFailure()
 			}
 	}
 }

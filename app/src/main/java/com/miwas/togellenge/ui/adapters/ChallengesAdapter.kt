@@ -10,10 +10,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
+import com.miwas.togellenge.presentation.listeners.ChallengeClickListener
 import com.miwas.togellenge.presentation.listeners.JoinButtonListener
 
 class ChallengesAdapter(
-	private val joinClickListener: JoinButtonListener
+	private val joinClickListener: JoinButtonListener,
+	private val challengeClickListener: ChallengeClickListener
 ) : RecyclerView.Adapter<ChallengesAdapter.FeedChallengeViewHolder>() {
 
 	private var challengesList = mutableListOf<Challenge>()
@@ -61,6 +63,10 @@ class ChallengesAdapter(
 		joinButton.setOnClickListener {
 			joinClickListener.onClick(challenge, position)
 		}
+
+		holder.itemView.setOnClickListener {
+			challengeClickListener.onClick(challenge, position)
+		}
 	}
 
 	fun setChallengesList(challenges: MutableList<Challenge>) {
@@ -75,6 +81,10 @@ class ChallengesAdapter(
 	fun removeChallenge(challenge: Challenge) {
 		challengesList.remove(challenge)
 		notifyDataSetChanged()
+	}
+
+	override fun getItemViewType(position: Int): Int {
+		return position
 	}
 
 	override fun getItemCount() = challengesList.size
