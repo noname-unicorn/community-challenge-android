@@ -12,6 +12,7 @@ import com.miwas.togellenge.network.listeners.MakeOperationListener
 import com.miwas.togellenge.presentation.interactors.ChallengesInteractor
 import com.miwas.togellenge.presentation.interactors.ConfirmationsInteractor
 import com.miwas.togellenge.presentation.interactors.UserInteractor
+import com.miwas.togellenge.presentation.listeners.ConfirmChallengeListener
 import com.miwas.togellenge.presentation.listeners.ReadyChallengeListener
 import com.miwas.togellenge.presentation.listeners.ReadyConfirmationListener
 import com.miwas.togellenge.presentation.view.ChallengeView
@@ -51,6 +52,14 @@ class ChallengePresenter(private val challengeId: String?) : BasePresenter<Chall
 	fun confirmButtonClicked() {
 		if (confirmationMethod != "text") {
 			baseView?.startConfirmationByFile(confirmationMethod == "video")
+		} else {
+			val confirmChallengeListener: ConfirmChallengeListener = object : ConfirmChallengeListener {
+
+				override fun onConfirm(text: String) {
+					createConfirmation(UUID.randomUUID().toString(), text)
+				}
+			}
+			baseView?.showTextConfirmationDialog(confirmChallengeListener)
 		}
 	}
 

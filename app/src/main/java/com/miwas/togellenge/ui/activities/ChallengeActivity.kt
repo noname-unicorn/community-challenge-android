@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -14,8 +16,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.miwas.togellenge.R
 import com.miwas.togellenge.models.Challenge
+import com.miwas.togellenge.models.Confirmation
+import com.miwas.togellenge.presentation.listeners.ConfirmChallengeListener
+import com.miwas.togellenge.presentation.listeners.ReadyConfirmationListener
 import com.miwas.togellenge.presentation.presenter.ChallengePresenter
 import com.miwas.togellenge.presentation.view.ChallengeView
+import com.miwas.togellenge.ui.popups.TextConfirmationDialog
 import com.miwas.togellenge.utils.Constants.CHALLENGE_ID_PARAM
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,6 +37,7 @@ class ChallengeActivity : AppCompatActivity(), ChallengeView {
 	private lateinit var dateOfCreation: TextView
 	private lateinit var confirmationMethodImageView: ImageView
 	private var isVideoConfirmation: Boolean = false
+	private lateinit var textConfirmationDialog: TextConfirmationDialog
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -43,6 +50,7 @@ class ChallengeActivity : AppCompatActivity(), ChallengeView {
 			participantsCount = findViewById(R.id.participants_count)
 			dateOfCreation = findViewById(R.id.date_of_creation)
 			confirmationMethodImageView = findViewById(R.id.confirmation_method)
+			textConfirmationDialog = TextConfirmationDialog(this)
 			initPresenter(challengeId)
 		}
 	}
@@ -76,6 +84,14 @@ class ChallengeActivity : AppCompatActivity(), ChallengeView {
 				pickImageFromGallery()
 			}
 		}
+	}
+
+	override fun showTextConfirmationDialog(confirmChallengeListener: ConfirmChallengeListener) {
+
+		textConfirmationDialog.showPopupWindow(
+			confirmChallengeButton,
+			confirmChallengeListener
+		)
 	}
 
 	private fun pickImageFromGallery() {
@@ -160,9 +176,11 @@ class ChallengeActivity : AppCompatActivity(), ChallengeView {
 				if (challenge.isCurrentUserParticipate) {
 					joinButton.background = joinButton.context.getDrawable(R.drawable.rounded_button_red)
 					joinButton.text = "Выйти"
+					confirmChallengeButton.visibility = VISIBLE
 				} else {
 					joinButton.background = joinButton.context.getDrawable(R.drawable.rounded_button_active)
 					joinButton.text = "Присоединиться"
+					confirmChallengeButton.visibility = GONE
 				}
 			}
 		}
